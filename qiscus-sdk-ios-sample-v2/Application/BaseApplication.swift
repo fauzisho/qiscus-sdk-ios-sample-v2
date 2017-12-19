@@ -21,6 +21,7 @@ class BaseApplication {
         self.delegate = delegate
         
         QiscusCommentClient.sharedInstance.roomDelegate = self
+
     }
     
     func validateUser() {
@@ -119,3 +120,48 @@ extension BaseApplication: QiscusRoomDelegate {
         print("Failed update room. Error: \(error)")
     }
 }
+
+//extension BaseApplication: QiscusChatVCDelegate {
+//    func chatVC(enableForwardAction viewController: QiscusChatVC) -> Bool {
+//        return false
+//    }
+//
+//    func chatVC(enableInfoAction viewController: QiscusChatVC) -> Bool {
+//        return true
+//    }
+//
+//    func chatVC(overrideBackAction viewController: QiscusChatVC) -> Bool {
+//        return true
+//    }
+//
+//    func chatVC(backAction viewController:QiscusChatVC, room:QRoom?, data:Any?) {
+//        viewController.tabBarController?.selectedIndex = 0
+//        _ = viewController.navigationController?.popToRootViewController(animated: true)
+//    }
+//
+//    func chatVC(titleAction viewController:QiscusChatVC, room:QRoom?, data:Any?) {
+//        guard let roomType = room?.type else { return }
+//
+//        if roomType == QRoomType.group {
+//            let targetVC                        = DetailGroupVC()
+//            targetVC.id                         = room?.id
+//            targetVC.hidesBottomBarWhenPushed   = true
+//            viewController.navigationController?.pushViewController(targetVC, animated: true)
+//
+//        } else {
+//            guard let contact = data as? Contact else { return }
+//
+//            let targetVC                        = DetailContactVC()
+//            targetVC.enableChatButton           = false
+//            targetVC.contact                    = contact
+//            targetVC.hidesBottomBarWhenPushed   = true
+//            viewController.navigationController?.pushViewController(targetVC, animated: true)
+//        }
+//    }
+//
+//    func chatVC(viewController:QiscusChatVC, infoActionComment comment:QComment,data:Any?) {
+//        //
+//    }
+//
+//}
+

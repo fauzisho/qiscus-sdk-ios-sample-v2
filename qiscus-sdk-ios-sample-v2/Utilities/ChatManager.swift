@@ -12,32 +12,34 @@ import Qiscus
 public func chatWithRoomId(_ roomId: String, isGroup: Bool = true, contact: Contact? = nil) -> Void {
     let chatView = Qiscus.chatView(withRoomId: roomId)
     
-    if isGroup {
-        chatView.titleAction = {
-            let targetVC                        = DetailGroupVC() //DetailChatVC()
-            targetVC.id                         = roomId
-            targetVC.hidesBottomBarWhenPushed   = true
-            chatView.navigationController?.pushViewController(targetVC, animated: true)
-        }
-        
-    } else {
-        chatView.titleAction = {
-            guard let contact = contact else { return }
-            
-            let targetVC                        = DetailContactVC()
-            targetVC.enableChatButton           = false
-            targetVC.contact                    = contact
-            
-            targetVC.hidesBottomBarWhenPushed   = true
-            chatView.navigationController?.pushViewController(targetVC, animated: true)
-        }
-    }
-    
-    chatView.setBackButton(withAction: {
-        chatView.tabBarController?.selectedIndex = 0
-        _ = chatView.navigationController?.popToRootViewController(animated: true)
-    })
-    
+//    chatView.delegate = ChatManager
+//    chatView.data = contact
+//    if isGroup {
+//        chatView.titleAction = {
+//            let targetVC                        = DetailGroupVC() //DetailChatVC()
+//            targetVC.id                         = roomId
+//            targetVC.hidesBottomBarWhenPushed   = true
+//            chatView.navigationController?.pushViewController(targetVC, animated: true)
+//        }
+//        
+//    } else {
+//        chatView.titleAction = {
+//            guard let contact = contact else { return }
+//            
+//            let targetVC                        = DetailContactVC()
+//            targetVC.enableChatButton           = false
+//            targetVC.contact                    = contact
+//            
+//            targetVC.hidesBottomBarWhenPushed   = true
+//            chatView.navigationController?.pushViewController(targetVC, animated: true)
+//        }
+//    }
+//    
+//    chatView.setBackButton(withAction: {
+//        chatView.tabBarController?.selectedIndex = 0
+//        _ = chatView.navigationController?.popToRootViewController(animated: true)
+//    })
+//    
     chatView.hidesBottomBarWhenPushed = true
     chatView.setBackTitle()
     openViewController(chatView)
@@ -52,18 +54,18 @@ public func chatWithUser(_ contact: Contact) {
     guard let email = contact.email else { return }
     let chatView = Qiscus.chatView(withUsers: [email])
     
-    chatView.titleAction = {
-        let targetVC                        = DetailContactVC()
-        targetVC.enableChatButton           = false
-        targetVC.contact                    = contact
-        targetVC.hidesBottomBarWhenPushed   = true
-        chatView.navigationController?.pushViewController(targetVC, animated: true)
-    }
-    
-    chatView.setBackButton(withAction: {
-        chatView.tabBarController?.selectedIndex = 0
-        _ = chatView.navigationController?.popToRootViewController(animated: true)
-    })
+//    chatView.titleAction = {
+//        let targetVC                        = DetailContactVC()
+//        targetVC.enableChatButton           = false
+//        targetVC.contact                    = contact
+//        targetVC.hidesBottomBarWhenPushed   = true
+//        chatView.navigationController?.pushViewController(targetVC, animated: true)
+//    }
+//
+//    chatView.setBackButton(withAction: {
+//        chatView.tabBarController?.selectedIndex = 0
+//        _ = chatView.navigationController?.popToRootViewController(animated: true)
+//    })
     
     chatView.hidesBottomBarWhenPushed = true
     chatView.setBackTitle()
@@ -74,12 +76,12 @@ public func chatWithUser(_ contact: Contact) {
 public func chatWithUniqueId(_ uniqueId: String) {
     let chatView = Qiscus.chatView(withUsers: [uniqueId])
     
-    chatView.titleAction = {}
-    
-    chatView.setBackButton(withAction: {
-        chatView.tabBarController?.selectedIndex = 0
-        _ = chatView.navigationController?.popToRootViewController(animated: true)
-    })
+//    chatView.titleAction = {}
+//
+//    chatView.setBackButton(withAction: {
+//        chatView.tabBarController?.selectedIndex = 0
+//        _ = chatView.navigationController?.popToRootViewController(animated: true)
+//    })
     
     chatView.hidesBottomBarWhenPushed = true
     chatView.setBackTitle()
@@ -91,17 +93,17 @@ public func createGroupChat(_ users: [String], title: String, avatarURL: String 
                     
         let chatView = Qiscus.chatView(withRoomId: room.id)
         
-        chatView.titleAction = {
-            let targetVC                        = DetailGroupVC()
-            targetVC.id                         = chatView.chatRoom?.id
-            targetVC.hidesBottomBarWhenPushed   = true
-            chatView.navigationController?.pushViewController(targetVC, animated: true)
-        }
-        
-        chatView.setBackButton(withAction: {
-            chatView.tabBarController?.selectedIndex = 0
-            _ = chatView.navigationController?.popToRootViewController(animated: true)
-        })
+//        chatView.titleAction = {
+//            let targetVC                        = DetailGroupVC()
+//            targetVC.id                         = chatView.chatRoom?.id
+//            targetVC.hidesBottomBarWhenPushed   = true
+//            chatView.navigationController?.pushViewController(targetVC, animated: true)
+//        }
+//
+//        chatView.setBackButton(withAction: {
+//            chatView.tabBarController?.selectedIndex = 0
+//            _ = chatView.navigationController?.popToRootViewController(animated: true)
+//        })
         
         chatView.hidesBottomBarWhenPushed = true
         chatView.setBackTitle()
@@ -110,4 +112,48 @@ public func createGroupChat(_ users: [String], title: String, avatarURL: String 
     }, onError: { (error) in
         print("new room failed: \(error)")
     })
+}
+
+class ChatManager: QiscusChatVCDelegate {
+    func chatVC(enableForwardAction viewController: QiscusChatVC) -> Bool {
+        return false
+    }
+    
+    func chatVC(enableInfoAction viewController: QiscusChatVC) -> Bool {
+        return true
+    }
+    
+    func chatVC(overrideBackAction viewController: QiscusChatVC) -> Bool {
+        return true
+    }
+    
+    func chatVC(backAction viewController:QiscusChatVC, room:QRoom?, data:Any?) {
+        viewController.tabBarController?.selectedIndex = 0
+        _ = viewController.navigationController?.popToRootViewController(animated: true)
+    }
+    
+    func chatVC(titleAction viewController:QiscusChatVC, room:QRoom?, data:Any?) {
+        guard let roomType = room?.type else { return }
+        
+        if roomType == QRoomType.group {
+            let targetVC                        = DetailGroupVC()
+            targetVC.id                         = room?.id
+            targetVC.hidesBottomBarWhenPushed   = true
+            viewController.navigationController?.pushViewController(targetVC, animated: true)
+            
+        } else {
+            guard let contact = data as? Contact else { return }
+            
+            let targetVC                        = DetailContactVC()
+            targetVC.enableChatButton           = false
+            targetVC.contact                    = contact
+            targetVC.hidesBottomBarWhenPushed   = true
+            viewController.navigationController?.pushViewController(targetVC, animated: true)
+        }
+    }
+    
+    func chatVC(viewController:QiscusChatVC, infoActionComment comment:QComment,data:Any?) {
+        //
+    }
+    
 }
