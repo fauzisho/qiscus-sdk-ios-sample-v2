@@ -8,8 +8,9 @@
 
 import UIKit
 import BadgeSwift
+import Qiscus
 
-class ChatCell: UITableViewCell {
+class ChatCell: QRoomListCell {
 
     @IBOutlet weak var chatNameLabel: UILabel!
     @IBOutlet weak var lastMessageLabel: UILabel!
@@ -20,21 +21,7 @@ class ChatCell: UITableViewCell {
     
     var item: Chat? {
         didSet {
-            guard let item = item else { return }
-            let imageDefault = (item.isGroup!) ? UIImage(named: "ic_default_group") : UIImage(named: "ic_default_avatar")
-            avatarImageView.loadAsync(item.avatarURL!,
-                                      placeholderImage: imageDefault,
-                                      header: Helper.headers)
-            chatNameLabel.text      = item.name
-            lastMessageLabel.text   = item.lastCommentText
             
-            if let date = item.date {
-                timestampLabel.text = date.timestampFormat(of: item.time)
-            }
-            if let unreadCount = item.unreadCount {
-                badgeLabel.text     = String(unreadCount)
-                badgeLabel.isHidden = (unreadCount == 0) ? true : false
-            }
         }
     }
     
@@ -67,5 +54,45 @@ class ChatCell: UITableViewCell {
         
         avatarImageView?.image = nil
     }
-    
+    override func setupUI() {
+        guard let item = room else { return }
+        let imageDefault = (item.type == .group) ? UIImage(named: "ic_default_group") : UIImage(named: "ic_default_avatar")
+        avatarImageView.loadAsync(item.avatarURL,
+                                  placeholderImage: imageDefault,
+                                  header: Helper.headers)
+        chatNameLabel.text      = item.name
+        
+        
+        if let lastMessage = room?.lastComment {
+            lastMessageLabel.text   = lastMessage.text
+            timestampLabel.text = lastMessage.time
+        }
+        
+//        if let date = item.date {
+//            timestampLabel.text = date.timestampFormat(of: item.time)
+//        }
+        badgeLabel.text     = String(item.unreadCount)
+        badgeLabel.isHidden = (item.unreadCount == 0) ? true : false
+    }
+    override func roomNameChange(){
+        chatNameLabel.text      = room!.name
+    }
+    override func roomAvatarChange(){
+        let imageDefault = (room!.type == .group) ? UIImage(named: "ic_default_group") : UIImage(named: "ic_default_avatar")
+        avatarImageView.loadAsync(room!.avatarURL,
+                                  placeholderImage: imageDefault,
+                                  header: Helper.headers)
+    }
+    override func roomParticipantChange(){}
+    override func roomLastCommentChange(){
+        if let lastMessage = room?.lastComment {
+            lastMessageLabel.text   = lastMessage.text
+            timestampLabel.text = lastMessage.time
+        }
+    }
+    override func roomUnreadCountChange(){
+        badgeLabel.text     = String(room!.unreadCount)
+        badgeLabel.isHidden = (room!.unreadCount == 0) ? true : false
+    }
+    override func roomDataChange(){}
 }
