@@ -9,7 +9,7 @@ target 'qiscus-sdk-ios-sample-v2' do
   use_frameworks!
 
   # Pods for qiscus-sdk-ios-sample-v2
-  pod 'Qiscus', '~> 2.6.0' 
+  pod 'Qiscus', '~> 2.8.0' 
   pod 'PKHUD', '~> 4.0'
   pod 'BadgeSwift', '~> 4.0'
   pod 'IQKeyboardManagerSwift'
@@ -23,13 +23,4 @@ target 'qiscus-sdk-ios-sample-v2' do
     inherit! :search_paths
     # Pods for testing
   end
-end
-
-post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings['ENABLE_BITCODE'] = 'YES'
-            config.build_settings['SWIFT_VERSION'] = '3.0'
-        end
-    end
 end

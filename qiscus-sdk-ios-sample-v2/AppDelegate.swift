@@ -48,7 +48,7 @@ extension AppDelegate {
         navigationBar.barStyle = .blackOpaque
         navigationBar.barTintColor = barTintColor
         navigationBar.tintColor = tintColor
-        navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: tintColor]
+        navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: tintColor]
         navigationBar.isTranslucent = false
     }
     
