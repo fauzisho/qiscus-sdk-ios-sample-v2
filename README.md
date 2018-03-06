@@ -56,6 +56,12 @@ Open Contact → Click Contact → Contact Detail
 
 ![contact_info](http://res.cloudinary.com/rohmadst/image/upload/v1511709877/ios-sample-app/chat-sdk/contact-info.gif)
 
+
+#### Delete Message
+Click message → Click delete for hard delete or delete for me for soft delete
+
+![delete_message](http://res.cloudinary.com/diufvqwbr/image/upload/v1520307839/delete_jgmoje.gif)
+
 ## Try Qiscus IOS Sample App
 If you simply want to try the IOS sample app, you can direct to our [github repository](https://github.com/qiscus/qiscus-sdk-web-sample) to clone our sample app. You can explore features of Qiscus Chat SDK.
 
